@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>曉楦專屬幸運抽獎</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft JhengHei", sans-serif;
+        }
+        body {
+            background-color: #ffd6e0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .title {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #d9176d;
+            margin: 20px 0;
+            text-shadow: 2px 2px 3px #fff;
+        }
+        .sub-title {
+            text-align: center;
+            color: #b8125d;
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+        .prize-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .prize-item {
+            background: #fff;
+            border: 3px solid #d9176d;
+            border-radius: 15px;
+            padding: 25px 10px;
+            text-align: center;
+            font-size: 1.1rem;
+            color: #333;
+            min-height: 130px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .prize-item.active {
+            background: #ff9fc4;
+            border-color: #ff1493;
+        }
+        #draw-btn {
+            display: block;
+            margin: 40px auto;
+            padding: 18px 50px;
+            font-size: 1.5rem;
+            background: linear-gradient(#ff4e91, #d9176d);
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        #result {
+            text-align: center;
+            font-size: 1.8rem;
+            color: #d9176d;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="title">🎀 曉楦專屬幸運抽獎 🎀</h1>
+    <p class="sub-title">曉楦is8787sbsb</p>
+
+    <div class="prize-grid">
+        <div class="prize-item" data-prize="拉麵一碗">🍜 拉麵一碗</div>
+        <div class="prize-item" data-prize="任選甜點">🍰 任選甜點</div>
+        <div class="prize-item" data-prize="任選化妝品">💄 任選化妝品</div>
+        <div class="prize-item" data-prize="任選大餐">🍔 任選大餐</div>
+        <div class="prize-item" data-prize="親一次（大獎）">💋 親一次（大獎）</div>
+        <div class="prize-item" data-prize="現金500">💰 現金500</div>
+        <div class="prize-item" data-prize="現金1000">💰💰 現金1000</div>
+        <div class="prize-item" data-prize="再抽一次">🔄 再抽一次</div>
+        <div class="prize-item" data-prize="神秘大獎">🏆 神秘大獎</div>
+    </div>
+
+    <button id="draw-btn">✨ 開始抽獎 ✨</button>
+    <div id="result"></div>
+
+    <script>
+        window.onload = function() {
+            const drawBtn = document.getElementById('draw-btn');
+            const prizeItems = document.querySelectorAll('.prize-item');
+            const resultDiv = document.getElementById('result');
+            let isDrawing = false;
+
+            drawBtn.addEventListener('click', function() {
+                if (isDrawing) return;
+                isDrawing = true;
+                resultDiv.innerText = '';
+                prizeItems.forEach(item => item.classList.remove('active'));
+
+                let flashCount = 0;
+                const flashTimer = setInterval(() => {
+                    prizeItems.forEach(item => item.classList.remove('active'));
+                    const randomIdx = Math.floor(Math.random() * prizeItems.length);
+                    prizeItems[randomIdx].classList.add('active');
+                    flashCount++;
+
+                    if (flashCount >= 15) {
+                        clearInterval(flashTimer);
+                        const winIdx = Math.floor(Math.random() * prizeItems.length);
+                        prizeItems.forEach(item => item.classList.remove('active'));
+                        prizeItems[winIdx].classList.add('active');
+                        const winPrize = prizeItems[winIdx].dataset.prize;
+                        resultDiv.innerText = `恭喜你抽到：${winPrize}！`;
+                        isDrawing = false;
+
+                        if (winPrize === '再抽一次' && !isDrawing) {
+                            setTimeout(() => {
+                                drawBtn.click();
+                            }, 1500);
+                        }
+                    }
+                }, 100);
+            });
+        };
+    </script>
+</body>
+</html>
